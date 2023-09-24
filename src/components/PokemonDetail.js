@@ -1,8 +1,9 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import { fetchData } from '../utils/api';
 import { Card } from 'antd';
 
-
+// Class component
+/*
 class PokemonDetail extends Component {
   constructor(props) {
     super(props);
@@ -48,3 +49,41 @@ class PokemonDetail extends Component {
 }
 
 export default PokemonDetail;
+*/
+
+// Functional component
+
+export default function PokemonDetail( { match } ) {
+
+  const [pokemon, setPokemon] = useState('');
+
+  useEffect(() => {
+    fetchData(`/pokemon/${match.params.id}`)
+      .then(data => setPokemon(data))
+      .catch(error => console.error(error));
+  }, []);
+
+  if (!pokemon) {
+    return <div>Loading...</div>;
+  }
+
+  return (
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+      <Card 
+        style={{ width: 300 }}
+        cover={<img alt={pokemon.name} src={pokemon.sprites?.front_default} />}
+      >
+        <Card.Meta 
+          title={pokemon.name} 
+          description={
+            <>
+              <p>Height: {pokemon.height}</p>
+              <p>Weight: {pokemon.weight}</p>
+              <p>Type: {pokemon.types.map(type => type.type.name).join(', ')}</p>
+            </>
+          }
+        />
+      </Card>
+    </div>
+  );
+}
