@@ -31,6 +31,7 @@ function App() {
         <Content style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto' }}>
           <Switch>
             <Route exact path="/" component={PokemonList} />
+            <Route exact path="/AbdoTech-Challenge-Arturo" component={PokemonList} />
             <Route path="/pokemon/:id" component={PokemonDetail} />
           </Switch>
         </Content>
