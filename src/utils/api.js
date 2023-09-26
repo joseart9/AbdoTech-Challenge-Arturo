@@ -1,28 +1,24 @@
 import { useState, useEffect } from 'react';
 
-async function fetchData(endpoint) {
-  return fetch(`https://pokeapi.co/api/v2${endpoint}`)
-    .then(response => response.json())
-    .catch(error => console.error(error));
-}
-
 // Custom hook for API calls
 export default function useFetch(endpoint) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect( () => {
-    fetchData(endpoint)
-      .then(data => {
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await fetch(`https://pokeapi.co/api/v2${endpoint}`);
+        const data = await response.json();
         setData(data);
         setLoading(false);
-      })
-      .catch(error => {
+      } catch (error) {
         setError(error);
-        setLoading(false);
-      })
-  }, []);
+      }
+    }
+    fetchData();
+  }, [endpoint]);
 
   return { data, loading, error };
 }
