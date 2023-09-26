@@ -32,7 +32,7 @@ function App() {
           <Switch>
             <Route exact path="/" component={PokemonList} />
             <Route exact path="/AbdoTech-Challenge-Arturo" component={PokemonList} />
-            <Route exact path ="/pokemon/:id" component={PokemonDetail} />
+            <Route path="/pokemon/:id" component={PokemonDetail} />
           </Switch>
         </Content>
         <Footer style={{ textAlign: 'center' }}>PokéApp ©2023 Created by ABDOTECH</Footer>
