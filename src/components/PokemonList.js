@@ -1,5 +1,5 @@
 import React, { Component, useState,  useEffect } from 'react';
-import { fetchData } from '../utils/api';
+import useFetch from '../utils/api';
 import { sortData, filterData } from '../utils/helpers';
 import Filter from './Filter';
 import { List, Card } from 'antd';
@@ -70,18 +70,16 @@ export default PokemonList;
 // Functional component
 
 export default function PokemonList() {
-
   const [pokemon, setPokemon] = useState([]);
   const [filter, setFilter] = useState('');
   const [sort, setSort] = useState('name');
 
-  useEffect(() => {
-    fetchData('/pokemon')
-      .then(data => {
-        setPokemon(data.results);
-      })
-      .catch(error => console.error(error));
-  }, []);
+  const filteredPokemon = filterData(pokemon, filter);
+  const sortedPokemon = sortData(filteredPokemon, sort);
+
+  const { data, loading, error } = useFetch('/pokemon');
+
+  console.log(data);
 
   const handleFilterChange = (filter) => {
     setFilter(filter);
@@ -91,9 +89,19 @@ export default function PokemonList() {
     setSort(sort);
   }
 
-  const filteredPokemon = filterData(pokemon, filter);
+  useEffect(() => {
+    if (data) {
+      setPokemon(data.results);
+    }
+  }, [data]);
 
-  const sortedPokemon = sortData(filteredPokemon, sort);
+  if (loading) {
+    return <div>Loading...</div>
+  }
+
+  if (error) {
+    return <div>Error loading API data!</div>
+  }
 
   return (
     <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '20px' }}>
